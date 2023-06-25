@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Permissions } from '../../authorization/enums/permissions.enum';
 import { CreateUser } from '../dto/create-user.dto';
-import { UsersService } from './users.service';
 import { User } from '../entities/user.entity';
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -42,5 +42,16 @@ describe('UsersService', () => {
     const foundUser = service.findOne(user.id);
 
     expect(foundUser).toMatchObject(user);
+  });
+
+  it('findAll', () => {
+    const users = Array.from({ length: 10 }, () => new User(Permissions.READ));
+
+    // @ts-expect-error access inmemory users store
+    service.users = new Map(users.map((user) => [user.id, user]));
+
+    const foundUsers = service.findAll();
+
+    expect(foundUsers).toMatchObject(users);
   });
 });

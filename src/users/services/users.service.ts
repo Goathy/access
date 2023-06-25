@@ -12,8 +12,8 @@ export class UsersService {
     this.users.set(user.id, user);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(): User[] {
+    return Array.from(this.users.values());
   }
 
   findOne(id: string): User {
