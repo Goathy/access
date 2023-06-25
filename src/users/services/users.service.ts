@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUser } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { UpdateUser } from '../dto/update-user.dto';
 import { User } from '../entities/user.entity';
 
 @Injectable()
@@ -20,8 +20,12 @@ export class UsersService {
     return this.users.get(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUser: UpdateUser): void {
+    const user = this.users.get(id);
+
+    Object.assign(user, updateUser);
+
+    this.users.set(user.id, user);
   }
 
   remove(id: string) {

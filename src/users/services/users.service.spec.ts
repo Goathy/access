@@ -3,6 +3,7 @@ import { Permissions } from '../../authorization/enums/permissions.enum';
 import { CreateUser } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
 import { UsersService } from './users.service';
+import { UpdateUser } from '../dto/update-user.dto';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -53,5 +54,23 @@ describe('UsersService', () => {
     const foundUsers = service.findAll();
 
     expect(foundUsers).toMatchObject(users);
+  });
+
+  it('update', () => {
+    const user = new User(Permissions.READ);
+
+    // @ts-expect-error access inmemory users store
+    service.users.set(user.id, user);
+
+    const payload = new UpdateUser(Permissions.CREATE, Permissions.READ);
+
+    service.update(user.id, payload);
+
+    const foundUser = service.findOne(user.id);
+
+    expect(foundUser).toMatchObject({
+      id: user.id,
+      permissions: ['CREATE', 'READ'],
+    });
   });
 });
