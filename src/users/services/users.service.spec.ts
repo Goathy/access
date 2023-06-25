@@ -73,4 +73,17 @@ describe('UsersService', () => {
       permissions: ['CREATE', 'READ'],
     });
   });
+
+  it('remove', () => {
+    const user = new User(Permissions.READ);
+
+    // @ts-expect-error access inmemory users store
+    service.users.set(user.id, user);
+
+    service.remove(user.id);
+
+    const foundUser = service.findOne(user.id);
+
+    expect(foundUser).toBeUndefined();
+  });
 });

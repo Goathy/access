@@ -28,7 +28,7 @@ export class UsersService {
     this.users.set(user.id, user);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  remove(id: string): void {
+    this.users.delete(id);
   }
 }
