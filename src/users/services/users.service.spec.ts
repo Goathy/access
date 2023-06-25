@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Permissions } from '../../authorization/enums/permissions.enum';
 import { CreateUser } from '../dto/create-user.dto';
 import { UsersService } from './users.service';
+import { User } from '../entities/user.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -30,5 +31,16 @@ describe('UsersService', () => {
       id: expect.any(String),
       permissions: ['ALL'],
     });
+  });
+
+  it('findOne', () => {
+    const user = new User(Permissions.READ);
+
+    // @ts-expect-error access inmemory users store
+    service.users.set(user.id, user);
+
+    const foundUser = service.findOne(user.id);
+
+    expect(foundUser).toMatchObject(user);
   });
 });
